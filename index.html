@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GANDO EDUCATION</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f8f4;color:#183326}
+header{background:#08783f;color:white;text-align:center;padding:28px 15px}
+header h1{margin:0;font-size:30px}
+header p{margin:8px 0 0}
+nav{background:#075d34;padding:12px;display:flex;gap:8px;overflow-x:auto}
+nav button{background:white;color:#075d34;border:0;border-radius:7px;padding:10px;white-space:nowrap;font-weight:bold}
+main{max-width:950px;margin:auto;padding:18px}
+section{display:none;background:white;padding:20px;margin:15px 0;border-radius:12px;box-shadow:0 2px 8px #0001}
+section.active{display:block}
+h2{color:#08783f}
+.card{background:#eaf5ed;padding:15px;margin:10px 0;border-radius:9px}
+button.action{background:#08783f;color:white;border:0;padding:11px 16px;border-radius:7px;margin:5px;cursor:pointer}
+input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #bbb;border-radius:7px}
+footer{text-align:center;background:#075d34;color:white;padding:20px;margin-top:25px}
+.small{font-size:13px;color:#607568}
+</style>
+</head>
+<body>
+
+<header>
+<h1>GANDO EDUCATION</h1>
+<p>Elimu bora kwa maendeleo ya mwanafunzi</p>
+<p><b>Learn • Practice • Succeed</b></p>
+</header>
+
+<nav>
+<button onclick="showPage('home')">Home</button>
+<button onclick="showPage('subjects')">Masomo</button>
+<button onclick="showPage('exams')">Mitihani</button>
+<button onclick="showPage('tutor')">AI Tutor</button>
+<button onclick="showPage('profile')">Profile</button>
+<button onclick="showPage('results')">Results</button>
+<button onclick="showPage('contact')">Contact</button>
+</nav>
+
+<main>
+
+<section id="home" class="active">
+<h2>Karibu GANDO EDUCATION</h2>
+<p>Jifunze, fanya mazoezi na jiandae kwa mitihani yako ukiwa popote.</p>
+<div class="card">
+<h3>Karibu mwanafunzi!</h3>
+<p>Website hii imeandaliwa kwa wanafunzi wa Gando Secondary School na wanafunzi wengine.</p>
+<button class="action" onclick="showPage('subjects')">Anza Kujifunza</button>
+</div>
+<div class="card">
+<h3>Malengo yetu</h3>
+<p>Kusaidia wanafunzi kuongeza maarifa, kufanya mazoezi na kufikia malengo yao ya elimu.</p>
+</div>
+</section>
+
+<section id="subjects">
+<h2>Masomo</h2>
+<p>Chagua somo lako ili kuona mada zake.</p>
+<div id="subjectList"></div>
+<div id="topicArea"></div>
+</section>
+
+<section id="exams">
+<h2>Mitihani na Mazoezi</h2>
+<div class="card">
+<h3>Mathematics - Algebra</h3>
+<p>Suluhisha swali lifuatalo:</p>
+<h3>4x + 2 = 18</h3>
+<input id="answer" placeholder="Andika jibu lako hapa">
+<button class="action" onclick="checkExam()">Submit Answer</button>
+<p id="examResult"></p>
+</div>
+</section>
+
+<section id="tutor">
+<h2>AI Tutor</h2>
+<p>Sehemu ya majaribio ya mwalimu msaidizi.</p>
+<textarea id="question" rows="4" placeholder="Andika swali lako hapa..."></textarea>
+<button class="action" onclick="askTutor()">Tuma Swali</button>
+<div class="card" id="tutorReply">Majibu ya majaribio yataonekana hapa.</div>
+<p class="small">Hii ni demo tu. AI halisi itahitaji kuunganishwa na huduma ya AI.</p>
+</section>
+
+<section id="profile">
+<h2>Student Profile</h2>
+<input id="studentName" placeholder="Jina la mwanafunzi">
+<input id="schoolName" placeholder="Jina la shule">
+<select id="studentClass">
+<option value="">Chagua darasa</option>
+<option>Form One</option>
+<option>Form Two</option>
+<option>Form Three</option>
+<option>Form Four</option>
+</select>
+<button class="action" onclick="saveProfile()">Save Profile</button>
+<p id="profileMessage"></p>
+</section>
+
+<section id="results">
+<h2>Matokeo Yangu</h2>
+<div class="card" id="marksArea">Bado hujafanya mtihani.</div>
+</section>
+
+<section id="contact">
+<h2>Wasiliana Nasi</h2>
+<p>Karibu GANDO EDUCATION. Unaweza kuwasiliana na shule au msimamizi kupitia mawasiliano rasmi yatakayowekwa hapa.</p>
+<p class="small">Namba ya mawasiliano itaongezwa baada ya kupata namba ya umma iliyoidhinishwa na shule au mlezi.</p>
+</section>
+
+</main>
+
+<footer>
+<p>GANDO EDUCATION © 2026</p>
+<p>Designed by ZEKO JR</p>
+</footer>
+
+<script>
+const subjects = {
+"Mathematics":["Algebra","Geometry","Statistics","Trigonometry"],
+"English":["Grammar","Writing Skills","Comprehension","Literature"],
+"Kiswahili":["Sarufi","Fasihi","Ufahamu","Uandishi"],
+"Biology":["Cell Biology","Nutrition","Transport","Reproduction"],
+"Chemistry":["Atomic Structure","Chemical Bonding","Acids and Bases","Organic Chemistry"],
+"Physics":["Measurement","Force","Electricity","Light"],
+"History":["Pre-colonial Africa","Colonialism","Nationalism","Independence"],
+"Geography":["Weather","Climate","Map Reading","Environmental Conservation"],
+"Civics":["Human Rights","Democracy","Government","Citizenship"]
+};
+
+function showPage(id){
+document.querySelectorAll("main section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+if(id==="results")showResults();
+}
+
+function loadSubjects(){
+const list=document.getElementById("subjectList");
+Object.keys(subjects).forEach(subject=>{
+const div=document.createElement("div");
+div.className="card";
+const title=document.createElement("h3");
+title.textContent=subject;
+const btn=document.createElement("button");
+btn.className="action";
+btn.textContent="Fungua somo";
+btn.onclick=()=>showTopics(subject);
+div.appendChild(title);
+div.appendChild(btn);
+list.appendChild(div);
+});
+}
+
+function showTopics(subject){
+const area=document.getElementById("topicArea");
+area.innerHTML="";
+const title=document.createElement("h3");
+title.textContent=subject+" - Mada";
+area.appendChild(title);
+subjects[subject].forEach(topic=>{
+const div=document.createElement("div");
+div.className="card";
+const heading=document.createElement("b");
+heading.textContent=topic;
+const description=document.createElement("p");
+description.textContent="Karibu ujifunze mada ya "+topic+". Maelezo na masomo zaidi yataongezwa.";
+div.appendChild(heading);
+div.appendChild(description);
+area.appendChild(div);
+});
+}
+
+function checkExam(){
+const answer=document.getElementById("answer").value.trim();
+const result=document.getElementById("examResult");
+if(answer==="4"){
+result.textContent="Correct! Hongera, jibu lako ni sahihi.";
+localStorage.setItem("gandoMarks","1");
+}else{
+result.textContent="Try again. Jaribu kutafuta thamani ya x.";
+}
+}
+
+function askTutor(){
+const q=document.getElementById("question").value.trim();
+const reply=document.getElementById("tutorReply");
+if(!q){reply.textContent="Tafadhali andika swali kwanza.";return;}
+reply.textContent="Asante kwa swali lako. Hii ni sehemu ya majaribio; AI Tutor halisi itaunganishwa baadaye.";
+}
+
+function saveProfile(){
+const name=document.getElementById("studentName").value.trim();
+const school=document.getElementById("schoolName").value.trim();
+const studentClass=document.getElementById("studentClass").value;
+if(!name){document.getElementById("profileMessage").textContent="Tafadhali andika jina lako.";return;}
+localStorage.setItem("gandoProfile",JSON.stringify({name,school,studentClass}));
+document.getElementById("profileMessage").textContent="Profile imehifadhiwa kwenye kifaa hiki.";
+}
+
+function showResults(){
+const marks=localStorage.getItem("gandoMarks");
+document.getElementById("marksArea").textContent=marks?"Umejibu swali 1 kwa usahihi.":"Bado hujafanya mtihani.";
+}
+
+loadSubjects();
+</script>
+
+</body>
+</html>
